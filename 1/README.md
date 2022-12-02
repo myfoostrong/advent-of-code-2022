@@ -10,6 +10,10 @@ Comparing current cals to the tracked cals in descending order instead would be 
 ## Working Notes
 
 Figuring out Golang basics, scanning files, syntax, etc.
+[Tutorial: Get started with Go](https://go.dev/doc/tutorial/getting-started)
+[Effective Go](https://go.dev/doc/effective_go)
+[bufio Scanner by line](https://pkg.go.dev/bufio#example-Scanner-Lines)
+
 
 ## Challenge
 
