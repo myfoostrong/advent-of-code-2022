@@ -3,6 +3,7 @@
 ## Retrospective
 
 Would have been cleaner to use an array to track the max totals. A function param of number of elves to define array length.
+
 More memory efficient as well, o(n) instead of o(2n). [line 16](https://github.com/myfoostrong/advent-of-code-2022/blob/main/1/day1.go#L16)
 
 Comparing current cals to the tracked cals in descending order instead would be more efficient [line 29](https://github.com/myfoostrong/advent-of-code-2022/blob/main/1/day1.go#L29)
@@ -10,9 +11,9 @@ Comparing current cals to the tracked cals in descending order instead would be 
 ## Working Notes
 
 Figuring out Golang basics, scanning files, syntax, etc.
-[Tutorial: Get started with Go](https://go.dev/doc/tutorial/getting-started)
-[Effective Go](https://go.dev/doc/effective_go)
-[bufio Scanner by line](https://pkg.go.dev/bufio#example-Scanner-Lines)
+* [Tutorial: Get started with Go](https://go.dev/doc/tutorial/getting-started)
+* [Effective Go](https://go.dev/doc/effective_go)
+* [bufio Scanner by line](https://pkg.go.dev/bufio#example-Scanner-Lines)
 
 
 ## Challenge
