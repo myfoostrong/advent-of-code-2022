@@ -2,10 +2,10 @@
 
 ## Retrospective
 
-Would have been cleaner to use an array to track the max totals. A function param of number of elves to define array length
-More memory efficient as well, o(n) instead of o(2n).
+Would have been cleaner to use an array to track the max totals. A function param of number of elves to define array length.
+More memory efficient as well, o(n) instead of o(2n). [line 16](https://github.com/myfoostrong/advent-of-code-2022/blob/main/1/day1.go#L16)
 
-Comparing current cals to the tracked cals in descending order instead would be more efficient
+Comparing current cals to the tracked cals in descending order instead would be more efficient [line 29](https://github.com/myfoostrong/advent-of-code-2022/blob/main/1/day1.go#L29)
 
 ## Working Notes
 
