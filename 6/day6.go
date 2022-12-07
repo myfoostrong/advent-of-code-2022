@@ -8,12 +8,6 @@ import (
 	// "strconv"
 )
 
-func build_stack(stack_msg string, stack_length int) []string {
-	stack := make([]string, stack_length)
-
-	return stack
-}
-
 func part1() int { 
 	
 	return 0
@@ -38,7 +32,6 @@ func main() {
 	
 	for scanner.Scan() {
 		row := scanner.Text()
-		// signal := [26]int{}
 		print(curr,"\n")
 		for i := range row {
 			match := false
