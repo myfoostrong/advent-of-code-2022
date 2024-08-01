@@ -2,6 +2,7 @@ package main
 
 import (
 	"aoc22/day9"
+	"aoc22/day11"
 	"log"
 )
 
