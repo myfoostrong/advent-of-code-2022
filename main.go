@@ -1,6 +1,7 @@
 package main
 
 import (
+	"aoc22/day10"
 	"aoc22/day9"
 	"log"
 )
@@ -15,6 +16,8 @@ func main() {
 	// Request a greeting message.
 	day9.Solve1()
 	day9.Solve2()
+
+	day10.Solve1()
 	// If an error was returned, print it to the console and
 	// exit the program.
 	// if err != nil {

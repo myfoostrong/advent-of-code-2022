@@ -13,7 +13,6 @@ type Vertex struct {
 	X, Y int
 }
 
-// Hello returns a greeting for the named person.
 func Solve1() (int, error) {
 	f, err := os.Open("./9/input.txt")
 	if err != nil {
@@ -32,12 +31,11 @@ func Solve1() (int, error) {
 		}
 		for range count {
 			head = moveHead(head, move[0])
-			tail = followTail(head, tail, move[0])
+			tail = followTail(head, tail)
 			tailVertices[tail] = true
 		}
 	}
 
-	// Return a greeting that embeds the name in a message.
 	count := len(tailVertices)
 	fmt.Println("Day9 Solution 1: ", count)
 
@@ -65,7 +63,7 @@ func Solve2() (int, error) {
 				if i == 0 {
 					rope[i] = moveHead(rope[i], move[0])
 				}
-				rope[i+1] = followTail(rope[i], rope[i+1], move[0])
+				rope[i+1] = followTail(rope[i], rope[i+1])
 			}
 			tailVertices[rope[9]] = true
 		}
@@ -75,14 +73,6 @@ func Solve2() (int, error) {
 	count := len(tailVertices)
 	fmt.Println("Day9 Solution 2: ", count)
 	return count, nil
-}
-
-func absDiff(x int, y int) int {
-	z := x - y
-	if z < 0 {
-		z = -z
-	}
-	return z
 }
 
 func abs(z int) int {
@@ -106,13 +96,7 @@ func moveHead(head Vertex, direction string) Vertex {
 	return head
 }
 
-func followTail(head Vertex, tail Vertex, direction string) Vertex {
-	// if absDiff(head.Y, tail.Y) > 1 {
-	// 	tail.Y += (head.Y - tail.Y) / 2
-	// }
-	// if absDiff(head.X, tail.X) > 1 {
-	// 	tail.X += (head.X - tail.X) / 2
-	// }
+func followTail(head Vertex, tail Vertex) Vertex {
 	diffX := (head.X - tail.X)
 	diffY := (head.Y - tail.Y)
 	var stepX, stepY int
@@ -137,28 +121,5 @@ func followTail(head Vertex, tail Vertex, direction string) Vertex {
 
 	tail.X += stepX
 	tail.Y += stepY
-
-	// switch direction {
-	// case "U":
-	// 	if absDiff(head.Y, tail.Y) > 1 {
-	// 		tail.Y += 1
-	// 		tail.X += (head.X - tail.X)
-	// 	}
-	// case "D":
-	// 	if absDiff(head.Y, tail.Y) > 1 {
-	// 		tail.Y -= 1
-	// 		tail.X += (head.X - tail.X)
-	// 	}
-	// case "L":
-	// 	if absDiff(head.X, tail.X) > 1 {
-	// 		tail.X -= 1
-	// 		tail.Y += (head.Y - tail.Y)
-	// 	}
-	// case "R":
-	// 	if absDiff(head.X, tail.X) > 1 {
-	// 		tail.X += 1
-	// 		tail.Y += (head.Y - tail.Y)
-	// 	}
-	// }
 	return tail
 }
