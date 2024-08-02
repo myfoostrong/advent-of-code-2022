@@ -9,13 +9,14 @@ import (
 	"strings"
 )
 
-type Vertex struct {
-	X, Y int
+type Monkey struct {
+	ID, Test, Pass, Fail int
+	Items                []int
 }
 
 // Hello returns a greeting for the named person.
 func Solve1() (int, error) {
-	f, err := os.Open("./9/input.txt")
+	f, err := os.Open("./11/input.txt")
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -23,7 +24,7 @@ func Solve1() (int, error) {
 	var head, tail Vertex
 
 	scanner := bufio.NewScanner(f)
-	for scanner.Scan() {
+	for _, i := range scanner.Scan() {
 		row := scanner.Text()
 		move := strings.Split(row, " ")
 		count, err := strconv.Atoi(move[1])
