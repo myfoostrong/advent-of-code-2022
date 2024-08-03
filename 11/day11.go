@@ -4,7 +4,7 @@ import (
 	"bufio"
 	"fmt"
 	"log"
-	"math"
+	"math/big"
 	"os"
 	"strconv"
 	"strings"
@@ -12,38 +12,39 @@ import (
 
 type Monkey struct {
 	ID, Pass, Fail int
-	TestNum        float64
-	Items          []float64
+	TestNum        big.Int
+	Items          []big.Int
 	Operation      []string
 }
 
-func (m Monkey) test(x float64) int {
-	if math.Mod(x, m.TestNum) == 0 {
+func (m Monkey) test(x big.Int) int {
+	quotient := new(big.Int)
+	if quotient.Mod(&x, &m.TestNum) == big.NewInt(0) {
 		return m.Pass
 	}
 	return m.Fail
 }
 
-func (m Monkey) operation(item float64) float64 {
-	var x float64
+func (m Monkey) operation(item *big.Int) *big.Int {
+	x := new(big.Int)
+	newItem := new(big.Int)
 	if m.Operation[2] == "old" {
 		x = item
 	} else {
-		val, err := strconv.ParseFloat(m.Operation[2], 64)
-		if err != nil {
-			log.Fatal(err)
+		_, ok := x.SetString(m.Operation[2], 10)
+		if !ok {
+			log.Fatal("Bad monkey")
 		}
-		x = val
 	}
 	if m.Operation[1] == "*" {
-		return item * x
+		return newItem.Mul(x, item)
 	} else if m.Operation[1] == "+" {
-		return item + x
+		return newItem.Add(x, item)
 	} else {
 		log.Fatal("Invalid math operation")
 	}
 	log.Fatal("Bad monkey")
-	return 0
+	return x
 }
 
 func newMonkey(input []string) Monkey {
@@ -56,22 +57,22 @@ func newMonkey(input []string) Monkey {
 
 	// Starting Items
 	itemsRow := strings.Split(strings.Split(input[1], ": ")[1], ", ")
-	var items []float64
+	var items []big.Int
 	for _, itemStr := range itemsRow {
-		item, err := strconv.ParseFloat(itemStr, 64)
-		if err != nil {
-			log.Fatal(err)
+		item, ok := big.NewInt(0).SetString(itemStr, 10)
+		if !ok {
+			log.Fatal("Bad big parse")
 		}
-		items = append(items, item)
+		items = append(items, *item)
 	}
 
 	//Operation
 	operation := strings.Split(strings.Split(input[2], "= ")[1], " ")
 
 	//Test
-	test, err := strconv.ParseFloat(strings.Split(input[3], "by ")[1], 64)
-	if err != nil {
-		log.Fatal(err)
+	test, ok := big.NewInt(0).SetString(strings.Split(input[3], "by ")[1], 10)
+	if !ok {
+		log.Fatal("Bad Test Parse")
 	}
 
 	//Pass
@@ -90,7 +91,7 @@ func newMonkey(input []string) Monkey {
 		ID:        id,
 		Items:     items,
 		Operation: operation,
-		TestNum:   test,
+		TestNum:   *test,
 		Pass:      pass,
 		Fail:      fail,
 	}
@@ -122,9 +123,9 @@ func Solve1() {
 	for range 20 {
 		for i, monkey := range monkeys {
 			for _, item := range monkey.Items {
-				newItem := math.Floor(monkey.operation(item) / 3)
-				target := monkey.test(newItem)
-				monkeys[target].Items = append(monkeys[target].Items, newItem)
+				newItem := big.NewInt(0).Div(monkey.operation(&item), big.NewInt(3))
+				target := monkey.test(*newItem)
+				monkeys[target].Items = append(monkeys[target].Items, *newItem)
 				inspections[i] += 1
 			}
 			monkeys[i].Items = nil
@@ -171,15 +172,16 @@ func Solve2() {
 	for j := range 10000 {
 		for i, monkey := range monkeys {
 			for _, item := range monkey.Items {
-				newItem := monkey.operation(item)
-				target := monkey.test(newItem)
-				monkeys[target].Items = append(monkeys[target].Items, newItem)
+				newItem := monkey.operation(&item)
+				target := monkey.test(*newItem)
+				monkeys[target].Items = append(monkeys[target].Items, *newItem)
 				inspections[i] += 1
 			}
 			monkeys[i].Items = nil
 		}
-		if j == 999 {
+		if j == 19 {
 			answer = j
+
 		}
 	}
 
@@ -193,7 +195,7 @@ func Solve2() {
 			second = x
 		}
 	}
-	answer = first * second
+	// answer = first * second
 
 	fmt.Println("Day11 Solution 1: ", answer)
 }

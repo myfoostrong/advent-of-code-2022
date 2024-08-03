@@ -5,7 +5,6 @@ go 1.22.2
 replace aoc22/day9 => ./9
 
 replace aoc22/day10 => ./10
-
 replace aoc22/day11 => ./11
 
 require (
