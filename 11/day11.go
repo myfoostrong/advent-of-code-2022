@@ -4,30 +4,32 @@ import (
 	"bufio"
 	"fmt"
 	"log"
+	"math"
 	"os"
 	"strconv"
 	"strings"
 )
 
 type Monkey struct {
-	ID, TestNum, Pass, Fail int
-	Items                   []int
-	Operation               []string
+	ID, Pass, Fail int
+	TestNum        float64
+	Items          []float64
+	Operation      []string
 }
 
-func (m Monkey) test(x int) int {
-	if x%m.TestNum == 0 {
+func (m Monkey) test(x float64) int {
+	if math.Mod(x, m.TestNum) == 0 {
 		return m.Pass
 	}
 	return m.Fail
 }
 
-func (m Monkey) operation(item int) int {
-	var x int
+func (m Monkey) operation(item float64) float64 {
+	var x float64
 	if m.Operation[2] == "old" {
 		x = item
 	} else {
-		val, err := strconv.Atoi(m.Operation[2])
+		val, err := strconv.ParseFloat(m.Operation[2], 64)
 		if err != nil {
 			log.Fatal(err)
 		}
@@ -54,9 +56,9 @@ func newMonkey(input []string) Monkey {
 
 	// Starting Items
 	itemsRow := strings.Split(strings.Split(input[1], ": ")[1], ", ")
-	var items []int
+	var items []float64
 	for _, itemStr := range itemsRow {
-		item, err := strconv.Atoi(itemStr)
+		item, err := strconv.ParseFloat(itemStr, 64)
 		if err != nil {
 			log.Fatal(err)
 		}
@@ -67,7 +69,7 @@ func newMonkey(input []string) Monkey {
 	operation := strings.Split(strings.Split(input[2], "= ")[1], " ")
 
 	//Test
-	test, err := strconv.Atoi(strings.Split(input[3], "by ")[1])
+	test, err := strconv.ParseFloat(strings.Split(input[3], "by ")[1], 64)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -120,12 +122,64 @@ func Solve1() {
 	for range 20 {
 		for i, monkey := range monkeys {
 			for _, item := range monkey.Items {
-				newItem := monkey.operation(item) / 3
+				newItem := math.Floor(monkey.operation(item) / 3)
 				target := monkey.test(newItem)
 				monkeys[target].Items = append(monkeys[target].Items, newItem)
 				inspections[i] += 1
 			}
 			monkeys[i].Items = nil
+		}
+	}
+
+	var first, second int
+	for _, x := range inspections {
+		if x > first {
+			second = first
+			first = x
+			continue
+		} else if x > second {
+			second = x
+		}
+	}
+	answer = first * second
+
+	fmt.Println("Day11 Solution 1: ", answer)
+}
+
+func Solve2() {
+	f, err := os.Open("./11/test.txt")
+	if err != nil {
+		log.Fatal(err)
+	}
+	var answer int
+	var monkeys []Monkey
+	var input []string
+
+	scanner := bufio.NewScanner(f)
+	for scanner.Scan() {
+		row := scanner.Text()
+		if len(row) == 0 {
+			monkeys = append(monkeys, newMonkey(input))
+			input = nil
+		} else {
+			input = append(input, row)
+		}
+	}
+	monkeys = append(monkeys, newMonkey(input))
+
+	inspections := make([]int, len(monkeys))
+	for j := range 10000 {
+		for i, monkey := range monkeys {
+			for _, item := range monkey.Items {
+				newItem := monkey.operation(item)
+				target := monkey.test(newItem)
+				monkeys[target].Items = append(monkeys[target].Items, newItem)
+				inspections[i] += 1
+			}
+			monkeys[i].Items = nil
+		}
+		if j == 999 {
+			answer = j
 		}
 	}
 
