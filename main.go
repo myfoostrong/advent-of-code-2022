@@ -18,6 +18,7 @@ func main() {
 	day9.Solve2()
 
 	day10.Solve1()
+	day10.Solve2()
 	// If an error was returned, print it to the console and
 	// exit the program.
 	// if err != nil {
