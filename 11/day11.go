@@ -173,7 +173,7 @@ func Solve2() {
 	for _, m := range monkeys {
 		divisorProduct.Mul(&m.TestNum, divisorProduct)
 	}
-	for j := range 10000 {
+	for range 10000 {
 		for i, monkey := range monkeys {
 			for _, item := range monkey.Items {
 				newItem := monkey.operation(&item)
