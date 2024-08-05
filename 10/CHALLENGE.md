@@ -1,4 +1,4 @@
---- Day 10: Cathode-Ray Tube ---
+# --- Day 10: Cathode-Ray Tube ---
 You avoid the ropes, plunge into the river, and swim to shore.
 
 The Elves yell something about meeting back up with them upriver, but the river is too loud to tell exactly what they're saying. They finish crossing the bridge and disappear from view.
@@ -189,8 +189,6 @@ Find the signal strength during the 20th, 60th, 100th, 140th, 180th, and 220th c
 
 Your puzzle answer was 14540.
 
-The first half of this puzzle is complete! It provides one gold star: *
-
 --- Part Two ---
 It seems like the X register controls the horizontal position of a sprite. Specifically, the sprite is 3 pixels wide, and the X register sets the horizontal position of the middle of that sprite. (In this system, there is no such thing as "vertical position": if the sprite's horizontal position puts its pixels where the CRT is currently drawing, then those pixels will be drawn.)
 
@@ -305,12 +303,15 @@ Current CRT row: ##..##..##..##..##..#
 End of cycle 21: finish executing addx -1 (Register X is now 20)
 Sprite position: ...................###..................
 Allowing the program to run to completion causes the CRT to produce the following image:
-```
+
 ##..##..##..##..##..##..##..##..##..##..
 ###...###...###...###...###...###...###.
 ####....####....####....####....####....
 #####.....#####.....#####.....#####.....
 ######......######......######......####
 #######.......#######.......#######.....
-```
 Render the image given by your program. What eight capital letters appear on your CRT?
+
+Your puzzle answer was EHZFZHCZ.
+
+Both parts of this puzzle are complete! They provide two gold stars: **
