@@ -19,7 +19,7 @@ type Monkey struct {
 
 func (m Monkey) test(x big.Int) int {
 	quotient := new(big.Int)
-	if quotient.Mod(&x, &m.TestNum) == big.NewInt(0) {
+	if quotient.Mod(&x, &m.TestNum).Cmp(big.NewInt(0)) == 0 {
 		return m.Pass
 	}
 	return m.Fail
@@ -148,7 +148,7 @@ func Solve1() {
 }
 
 func Solve2() {
-	f, err := os.Open("./11/test.txt")
+	f, err := os.Open("./11/input.txt")
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -169,19 +169,20 @@ func Solve2() {
 	monkeys = append(monkeys, newMonkey(input))
 
 	inspections := make([]int, len(monkeys))
+	divisorProduct := big.NewInt(1)
+	for _, m := range monkeys {
+		divisorProduct.Mul(&m.TestNum, divisorProduct)
+	}
 	for j := range 10000 {
 		for i, monkey := range monkeys {
 			for _, item := range monkey.Items {
 				newItem := monkey.operation(&item)
+				newItem.Mod(newItem, divisorProduct)
 				target := monkey.test(*newItem)
 				monkeys[target].Items = append(monkeys[target].Items, *newItem)
 				inspections[i] += 1
 			}
 			monkeys[i].Items = nil
-		}
-		if j == 19 {
-			answer = j
-
 		}
 	}
 
@@ -195,7 +196,7 @@ func Solve2() {
 			second = x
 		}
 	}
-	// answer = first * second
+	answer = first * second
 
-	fmt.Println("Day11 Solution 1: ", answer)
+	fmt.Println("Day11 Solution 2: ", answer)
 }
