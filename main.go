@@ -4,6 +4,7 @@ import (
 	"aoc22/day10"
 	"aoc22/day11"
 	"aoc22/day12"
+	"aoc22/day13"
 	"aoc22/day9"
 	"log"
 )
@@ -22,4 +23,7 @@ func main() {
 
 	day12.Solve1()
 	day12.Solve2()
+
+	day13.Solve1()
+	day13.Solve2()
 }
