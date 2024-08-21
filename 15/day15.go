@@ -1,4 +1,4 @@
-package day14
+package day15
 
 import (
 	"bufio"
@@ -69,9 +69,29 @@ func markGrid(grid [][]bool, sensor []int) [][]bool {
 	dist := sensor[2]
 	for dx := range dist {
 		dy := dist - dx
+		for i := range dy {
+			grid[sensor[1]+i][sensor[0]+dx] = true
+			grid[sensor[1]+i][sensor[0]-dx] = true
+			grid[sensor[1]-i][sensor[0]+dx] = true
+			grid[sensor[1]-i][sensor[0]-dx] = true
+		}
 		grid[dy][dx] = true
 	}
 	return grid
+}
+
+func printGrid(grid [][]bool, xMin, xMax, yMin, yMax int) {
+	fmt.Println("\n")
+	for i := yMin; i < yMax; i++ {
+		for _, c := range grid[i][xMin:xMax] {
+			a := "."
+			if c {
+				a = "#"
+			}
+			fmt.Print(a)
+		}
+		fmt.Print("\n")
+	}
 }
 
 func Solve1() {
@@ -92,6 +112,7 @@ func Solve1() {
 		minX, maxX, minY, maxY = getMaxMin(sensor, dist, minX, maxX, minY, maxY)
 	}
 	grid := buildGrid(minX, maxX, minY, maxY)
+	printGrid(grid, minX, maxX, minY, maxY)
 	for _, sensor := range sensorList {
 		grid = markGrid(grid, sensor)
 	}
@@ -100,7 +121,7 @@ func Solve1() {
 			answer += 1
 		}
 	}
-	fmt.Println("Day14 Solution 1: ", answer)
+	fmt.Println("Day15 Solution 1: ", answer)
 }
 
 func Solve2() {

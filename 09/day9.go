@@ -14,7 +14,7 @@ type Vertex struct {
 }
 
 func Solve1() (int, error) {
-	f, err := os.Open("./9/input.txt")
+	f, err := os.Open("./09/input.txt")
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -43,7 +43,7 @@ func Solve1() (int, error) {
 }
 
 func Solve2() (int, error) {
-	f, err := os.Open("./9/input.txt")
+	f, err := os.Open("./09/input.txt")
 	if err != nil {
 		log.Fatal(err)
 	}
