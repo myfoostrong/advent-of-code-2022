@@ -30,8 +30,8 @@ func max(a int, b int) int {
 	return b
 }
 
-func parse(row string) ([]int, []int) {
-	re := regexp.MustCompile("[0-9]+")
+func parse(row string) []int {
+	re := regexp.MustCompile("[-]?[0-9]+")
 	coords := re.FindAllString(row, -1)
 	var out []int
 	for _, c := range coords {
@@ -41,23 +41,23 @@ func parse(row string) ([]int, []int) {
 		}
 		out = append(out, n)
 	}
-	return out[0:2], out[2:4]
+	return out
 }
 
-func getRange(sensor, beacon []int) int {
-	return abs(sensor[0]-beacon[0]) + abs(sensor[1]-beacon[1])
+func getRange(sensor []int) int {
+	return abs(sensor[0]-sensor[2]) + abs(sensor[1]-sensor[3])
 }
 
-func getMaxMin(sensor []int, dist, minX, maxX, minY, maxY int) (int, int, int, int) {
-	return min(sensor[0]-dist, minX),
-		max(sensor[0]+dist, maxX),
-		min(sensor[1]-dist, minY),
-		max(sensor[1]+dist, maxY)
+func getMaxMin(sensor []int, minX, maxX, minY, maxY int) (int, int, int, int) {
+	return min(min(sensor[0], minX), sensor[2]),
+		max(max(sensor[0], maxX), sensor[2]),
+		min(min(sensor[1], minY), sensor[3]),
+		max(max(sensor[1], maxY), sensor[3])
 }
 
 func buildGrid(minX, maxX, minY, maxY int) [][]bool {
-	y := maxY - minY
-	x := maxX - minX
+	y := (maxY - minY) + 1
+	x := (maxX - minX) + 1
 	grid := make([][]bool, y)
 	for i := range y {
 		grid[i] = make([]bool, x)
@@ -65,27 +65,51 @@ func buildGrid(minX, maxX, minY, maxY int) [][]bool {
 	return grid
 }
 
-func markGrid(grid [][]bool, sensor []int) [][]bool {
-	dist := sensor[2]
-	for dx := range dist {
+func normalize(sensorList [][]int, minX, minY int) [][]int {
+	for i := range sensorList {
+		sensorList[i][0] -= minX
+		sensorList[i][1] -= minY
+		sensorList[i][2] -= minX
+		sensorList[i][3] -= minY
+	}
+	return sensorList
+}
+
+func markGrid(grid [][]bool, sensor []int, maxX, maxY int) [][]bool {
+	dist := getRange(sensor)
+	for dx := range dist + 1 {
 		dy := dist - dx
-		for i := range dy {
-			grid[sensor[1]+i][sensor[0]+dx] = true
-			grid[sensor[1]+i][sensor[0]-dx] = true
-			grid[sensor[1]-i][sensor[0]+dx] = true
-			grid[sensor[1]-i][sensor[0]-dx] = true
+		for i := range dy + 1 {
+			if sensor[1]+i <= maxY {
+				if sensor[0]+dx <= maxX {
+					grid[sensor[1]+i][sensor[0]+dx] = true
+				}
+				if sensor[0]-dx >= 0 {
+					grid[sensor[1]+i][sensor[0]-dx] = true
+				}
+			}
+			if sensor[1]-i >= 0 {
+				if sensor[0]+dx <= maxX {
+					grid[sensor[1]-i][sensor[0]+dx] = true
+				}
+				if sensor[0]-dx >= 0 {
+					grid[sensor[1]-i][sensor[0]-dx] = true
+				}
+			}
+			printGrid(grid)
 		}
-		grid[dy][dx] = true
+		// grid[dy][dx] = true
 	}
 	return grid
 }
 
-func printGrid(grid [][]bool, xMin, xMax, yMin, yMax int) {
+func printGrid(grid [][]bool) {
 	fmt.Println("\n")
-	for i := yMin; i < yMax; i++ {
-		for _, c := range grid[i][xMin:xMax] {
+	// for i := yMin; i < yMax; i++ {
+	for y := range grid {
+		for x := range grid[y] {
 			a := "."
-			if c {
+			if grid[y][x] {
 				a = "#"
 			}
 			fmt.Print(a)
@@ -95,7 +119,7 @@ func printGrid(grid [][]bool, xMin, xMax, yMin, yMax int) {
 }
 
 func Solve1() {
-	f, err := os.Open("./14/input.txt")
+	f, err := os.Open("./15/test.txt")
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -105,17 +129,19 @@ func Solve1() {
 	scanner := bufio.NewScanner(f)
 	for scanner.Scan() {
 		row := scanner.Text()
-		sensor, beacon := parse(row)
-		dist := getRange(sensor, beacon)
-		sensor = append(sensor, dist)
+		sensor := parse(row)
 		sensorList = append(sensorList, sensor)
-		minX, maxX, minY, maxY = getMaxMin(sensor, dist, minX, maxX, minY, maxY)
+		minX, maxX, minY, maxY = getMaxMin(sensor, minX, maxX, minY, maxY)
 	}
 	grid := buildGrid(minX, maxX, minY, maxY)
-	printGrid(grid, minX, maxX, minY, maxY)
+	sensorList = normalize(sensorList, minX, minY)
+	maxX -= minX
+	maxY -= minY
 	for _, sensor := range sensorList {
-		grid = markGrid(grid, sensor)
+		// printGrid(grid)
+		grid = markGrid(grid, sensor, maxX, maxY)
 	}
+
 	for _, c := range grid[10] {
 		if c {
 			answer += 1
