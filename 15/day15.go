@@ -96,9 +96,7 @@ func markGrid(grid [][]bool, sensor []int, maxX, maxY int) [][]bool {
 					grid[sensor[1]-i][sensor[0]-dx] = true
 				}
 			}
-			printGrid(grid)
 		}
-		// grid[dy][dx] = true
 	}
 	return grid
 }
@@ -119,7 +117,7 @@ func printGrid(grid [][]bool) {
 }
 
 func Solve1() {
-	f, err := os.Open("./15/test.txt")
+	f, err := os.Open("./15/input.txt")
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -141,7 +139,10 @@ func Solve1() {
 		// printGrid(grid)
 		grid = markGrid(grid, sensor, maxX, maxY)
 	}
-
+	for _, sensor := range sensorList {
+		// printGrid(grid)
+		grid[sensor[3]][sensor[2]] = false
+	}
 	for _, c := range grid[10] {
 		if c {
 			answer += 1
